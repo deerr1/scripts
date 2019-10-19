@@ -1,38 +1,80 @@
 import openpyxl
 import os
-# rows = {
-#     'Name of indicator':'d',
-#     'categories':{
-#         'Category':'',
-#         'rows':{
-#             'responsible unit':'',
-#             'types of work':'',
-#             'result ':'',
-#             'necessary':'',
-#             'done':'',
-#             'percent':'',
 
-#             }
-#         }
-#     }
 fil = os.path.abspath(__file__)
 
-tab={
-        'indicator1':
-            {
-                'category1':[["1",'1','1','1','1','1',],['2','2','2','2','2','2',],['3','3','3','3','3','3',]],
-                'category2':[["dsfs",'s','s','s','s','s',],['d','d','d','d','d','d',],['f','f','f','f','f','f',]],
-                
-            },
-        'indicator2':
-            {
-                'category1':[["1",'1','1','1','1','1',],['2','2','2','2','2','2',],['3','3','3','3','3','3',]],
-                'category2':[['s','s','s','s','s','s',],['d','d','d','d','d','d',],['f','f','f','f','f','f',]],
-                
-            },
-        
-    }
-
+tab=[
+        {
+        "indicator": 1,
+        "category": 1,
+        "unit": 1,
+        "work": 1,
+        "result": "\u0427\u0442\u043e \u0442\u043e \u043f\u043e\u043b\u0435\u0437\u043d\u043e\u0435",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-15"
+        },
+        {
+        "indicator": 1,
+        "category": 2,
+        "unit": 1,
+        "work": 1,
+        "result": "2",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+        {
+        "indicator": 1,
+        "category": 2,
+        "unit": 1,
+        "work": 1,
+        "result": "2",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+        {
+        "indicator": 2,
+        "category": 1,
+        "unit": 1,
+        "work": 1,
+        "result": "3",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+        {
+        "indicator": 2,
+        "category": 1,
+        "unit": 1,
+        "work": 1,
+        "result": "4",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+        {
+        "indicator": 3,
+        "category": 1,
+        "unit": 1,
+        "work": 1,
+        "result": "5",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+        {
+        "indicator": 3,
+        "category": 1,
+        "unit": 1,
+        "work": 1,
+        "result": "6",
+        "need": 213,
+        "accept": 123,
+        "date": "2019-10-16"
+        },
+    ]
 
 wb = openpyxl.Workbook()
 ws = wb.active
@@ -46,40 +88,96 @@ rows=['Наименование показателя','Категория','От
 for i, value in enumerate(rows,1):
     ws.cell(row=2,column= i).value=value
 
-
-
 sh=0
 sc=0
-for i, value_tab in enumerate(list(tab.keys()),1):
-    ws.cell(row=3+sh,column=1).value=value_tab
-    sc = 3+sh
-    print(3+sh)
-    for y, value_category in enumerate(list(tab[value_tab].keys()),1):
-        ws.cell(row=3+sh,column=2).value=value_category
 
 
-        for stroc, value_rows in enumerate(tab[value_tab][value_category],3):
+value_ind=0
+value_categ=0
+mas_indicator=[]
+mas_indicator_col=[]
+mas_category=[]
+mas_category_col=[]
+w=-1
+for i in tab:
+    if i["indicator"]!=value_ind:
+        value_ind=i["indicator"]
+        mas_indicator.append(value_ind)
+        mas_indicator_col.append(1)
+        w+=1
+    else:
+        mas_indicator_col[w]+=1
 
-            for stolb, row in enumerate(value_rows,3):
 
-                for z, value in enumerate(row,1):
-                    cell = ws.cell(row = stroc+sh,column=stolb )
-                    cell.value = value
-        ws.merge_cells(start_row=3+sh,start_column=2,end_row=sh+stroc,end_column=2)
+print(mas_indicator) 
+print(mas_indicator_col) 
 
-        
-        
-        
-        sh+=stroc-2
-        
 
-    ws.cell(row=3+sh,column=1).value='Итого:'
-    ws.merge_cells(start_row=3+sh,start_column=1,end_row=3+sh,end_column=5)
-    ws.merge_cells(start_row=sc,start_column=1,end_row=2+sh,end_column=1)
+
+w=-1
+f=-1
+for i in mas_indicator:
+    mas_category.append([])
+    mas_category_col.append([])
+    f+=1
+    value_categ=0
+    for y in tab:
+       
+        if y.get("indicator")==i:
+
+            if y.get("category")!= value_categ:
+                value_categ=y.get("category")
+                mas_category[f].append(value_categ)
+                mas_category_col[f].append(1)
+                
+                w+=1
+            else:
+                mas_category_col[f][w]+=1
+    w=-1
+
+print(mas_category) 
+print(mas_category_col) 
+
+
+e=0
+q=0
+a=0
+aa=0
+for i, rows in enumerate(tab,1):
     
-    print(sc)
-    print(sh)
-    sh+=1        
+    if i==mas_indicator_col[e]+1+q:
+        e+=1
+        q=mas_indicator_col[e]
+        a+=1
+        aa=a
+    else:
+        aa=a
+    print(i,e,q,a,aa)
+
+    for y, row in enumerate(list(rows.keys()),1):
+
+        cell=ws.cell(row=i+aa+2, column=y)
+        cell.value=rows[row]
+    
+
+f=0
+g=0
+for i in mas_indicator_col:
+
+    ws.merge_cells(start_row=3+f,start_column=1,end_row=3+f+i-1,end_column=1)
+
+    for y in mas_category_col:
+        for z in y:
+            ws.merge_cells(start_row=3+g,start_column=2,end_row=3+g+z-1,end_column=2)
+            g+=z
+        g+=1
+    f+=i
+    ws.cell(row=3+f,column=1).value='Итого:'
+    ws.merge_cells(start_row=3+f,start_column=1,end_row=3+f,end_column=5)
+    f+=1
+    
+
+  
     
    
 
