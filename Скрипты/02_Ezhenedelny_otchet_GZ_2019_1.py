@@ -1,6 +1,8 @@
 import openpyxl
 import os
-
+from openpyxl.styles import Font
+from openpyxl.styles import Border, Side
+from openpyxl.styles import Alignment
 fil = os.path.abspath(__file__)
 
 tab=[
@@ -175,11 +177,38 @@ for i in mas_indicator_col:
     ws.cell(row=3+f,column=1).value='Итого:'
     ws.merge_cells(start_row=3+f,start_column=1,end_row=3+f,end_column=5)
     f+=1
-    
+# Форматирование таблицы
+thin_border=Border(left=Side(style='thin'),
+                right=Side(style='thin'),
+                top=Side(style='thin'),
+                bottom=Side(style='thin'))
+                            
+style1 = Font(name='PT Astra Serif',size=11,bold=True,vertAlign='baseline')
+style2 = Font(name='PT Astra Serif',size=11,bold=False,vertAlign='baseline')
+for cell in ws['A1':'H2']:
+    for row in cell:
+        row.font= style1
+        row.alignment=Alignment(horizontal='center',vertical='center',wrapText=True)
+        if row.row ==2:
+            row.border = thin_border 
+# как f используется кол-во строк записей        
+for cell in ws['A3':f'H{f+2}']:
+    for row in cell:
+        row.font= style2
+        row.alignment=Alignment(horizontal='center',vertical='center',wrapText=True)
+        row.border = thin_border 
+        
 
-  
-    
-   
+ws.column_dimensions['A'].width=26.71
+ws.column_dimensions['B'].width=16.57
+ws.column_dimensions['C'].width=17.71
+ws.column_dimensions['D'].width=48.57
+ws.column_dimensions['E'].width=38.71
+ws.column_dimensions['F'].width=14.71
+ws.column_dimensions['G'].width=13.71
+ws.column_dimensions['H'].width=13.71
+
+
 
 fil = os.path.join(fil,'..\..\Документы')
 fil = os.path.abspath(fil)
